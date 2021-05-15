@@ -7,7 +7,6 @@
 
 /*
 void printBST(Bst_Node const& node) {
-    std::cout << "yeaaahhhh!!! \n";
     std::ofstream Graphfile("Graph3.txt");
     Graphfile << "digraph BST { \n";
     Graphfile << "    node [fontname=\"Arial\"]; \n";
