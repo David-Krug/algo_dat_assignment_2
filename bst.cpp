@@ -1,13 +1,13 @@
 #include "bst.hpp"
 
 //Bst
-int* search(int key_value, Bst_Node const* node) const		//Should return pointer to node (?) 
+Bst_Node* Bst::search(int key_value, Bst_Node* node) const		//Should return pointer to node (?) 
 {
   if (node->data_ == key_value){
 	return node;
   }
   else if (node->data_ > key_value) {
-    if ()
+    //if ()
   }
   else if (node->data_ > key_value) {
     
@@ -24,7 +24,7 @@ int* search(int key_value, Bst_Node const* node) const		//Should return pointer 
 }
 
 
-int* minimum() const				//Needs node as parameter to know where to start (important for successor & predecessor functions)
+int* Bst::minimum() const				//Needs node as parameter to know where to start (important for successor & predecessor functions)
 {
 	//while nodeX.leftchild != NIL:
 		//nodeX = nodeX.leftchild
@@ -33,15 +33,16 @@ int* minimum() const				//Needs node as parameter to know where to start (import
   return nullptr;
 }
 
-int* maximum() const				//Needs node as parameter to know where to start (important for successor & predecessor functions)
+int* Bst::maximum() const				//Needs node as parameter to know where to start (important for successor & predecessor functions)
 {
 	//while nodeX.rightchild != NIL:
 		//nodeX = nodeX.rightchild
 		
 	//return nodeX or nodeX.value;
+	return nullptr;
 }
 
-int* successor(Bst_Node const& node) const
+int* Bst::successor(Bst_Node const& node) const
 {
 	//if nodeX.rightchild != NIL:
 		//get minimum of right subtree
@@ -51,9 +52,10 @@ int* successor(Bst_Node const& node) const
 		//check if NodeX is parent's left child:
 			//if true, then parent is successor
 			//if false, go further up
+	return nullptr;
 }
 
-int* predecessor(Bst_Node const& node) const
+int* Bst::predecessor(Bst_Node const& node) const
 {
 	//if nodeX.leftchild != NIL:
 		  //get maximum of left subtree
@@ -63,10 +65,40 @@ int* predecessor(Bst_Node const& node) const
 		//check if NodeX is parent's right child:
 			//if true, then parent is successor
 			//if false, go further up
+	return nullptr;
 }
 
-void add_node(Bst_Node const& node)
+void Bst::add_node(int node_value)
 {
+  Bst_Node* node = new Bst_Node( node_value );
+  if (root_ == nullptr) {
+	root_ = node;
+  }
+  else {
+	bool r;
+	auto position = root_;
+	auto parent = position;
+	while (position != nullptr) {
+	  if (position->data_ > node->data_) {
+		auto parent = position;
+		bool r = false;
+		position = position->left_child_;
+	  }
+	  if (position->data_ < node->data_) {
+		auto parent = position;
+		bool r = true;
+		position = position->right_child_;
+	  }
+	}
+	node->parent_ = parent;
+	if (r) {
+	  parent->right_child_ = node;
+	}
+	else {
+	  parent->left_child_ = node;
+	}
+  }
+
 	//while nodeX.value != NIL:
 		//if nodeX.value > node.value:
 			//nodeX = nodeX.leftchild;
@@ -77,7 +109,7 @@ void add_node(Bst_Node const& node)
 	//(after while-loop, nodeX is empty child of a node)
 }
 
-void remove_node(Bst_Node const& node)
+void Bst::remove_node(Bst_Node* node)
 {
 	//if node.leftchild == NIL and node.rightchild == NIL:
 		//replace node with NIL
@@ -99,3 +131,6 @@ void remove_node(Bst_Node const& node)
 }
 
 //Bst_Node
+
+Bst_Node::Bst_Node(int data_, struct Bst_Node* parent_, struct Bst_Node* left_child_, struct Bst_Node* right_child_)
+{}

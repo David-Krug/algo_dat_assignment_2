@@ -1,28 +1,30 @@
 #ifndef BST_HPP
 #define BST_HPP
 
-struct Bst()
+//template <typename T>;
+struct Bst_Node
 {
+  Bst_Node() = default;
+  Bst_Node(int data_, struct Bst_Node* parent_ = nullptr, struct Bst_Node* left_child_ = nullptr, struct Bst_Node* right_child_ = nullptr);
   //member variables
-  struct Bst_Node* root_ = new Bst_Node;
+  int data_ = 0;
+  struct Bst_Node* parent_ = nullptr;
+  struct Bst_Node* left_child_ = nullptr;
+  struct Bst_Node* right_child_ = nullptr;
+};
+
+struct Bst
+{
   //member functions
-  int* search(int key_value, Bst_Node const& node = root_) const;
+  Bst_Node* search(int key_value, Bst_Node* node) const;
   int* minimum() const;
   int* maximum() const;
   int* successor(Bst_Node const& node) const;
   int* predecessor(Bst_Node const& node) const;
-  void add_node(Bst_Node const& node);
-  void remove_node(Bst_Node const& node);
-}
-
-template <typename T>
-struct Bst_Node()
-{
+  void add_node(int node_value);
+  void remove_node(Bst_Node* node);
   //member variables
-  T data_;
-  struct Bst_Node* parent_ = nullptr;
-  struct Bst_Node* left_child_ = nullptr;
-  struct Bst_Node* right_child_ = nullptr;
-}
+  struct Bst_Node* root_ = nullptr;
+};
 
 #endif // !BST_HPP
