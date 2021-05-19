@@ -119,26 +119,48 @@ Bst_Node* Bst::remove_node(Bst_Node* node)
 {
   //remove leaf
   if (node->left_child_ == nullptr && node->right_child_ == nullptr) {
+	  if (node != root_) {
+		if (node->data_ > node->parent_->data_) {
+		  node->parent_->right_child_ = nullptr;
+		}
+		else {
+		  node->parent_->left_child_ = nullptr;
+		}
+	  }
 	delete node;
 	node = nullptr;
   }
   //remove node with only right child
   else if (node->left_child_ == nullptr) {
-	auto temp = node;
-	node = node->right_child_;
-	delete temp;
+	if (node != root_) {
+	  if (node->data_ > node->parent_->data_) {
+		node->parent_->right_child_ = node->right_child_;
+	  }
+	  else {
+		node->parent_->left_child_ = node->right_child_;
+	  }
+	}
+	delete node;
+	node = nullptr;
   }
   //remove node with only left child
   else if (node->right_child_ == nullptr) {
-	auto temp = node;
-	node = node->left_child_;
-	delete temp;
+	if (node != root_) {
+	  if (node->data_ > node->parent_->data_) {
+		node->parent_->right_child_ = node->left_child_;
+	  }
+	  else {
+		node->parent_->left_child_ = node->left_child_;
+	  }
+	}
+	delete node;
+	node = nullptr;
   }
   //remove node with two childs
   else {
-	auto temp = minimum(node);
+	auto temp = predecessor(node);
 	node->data_ = temp->data_;
-	node->right_child_ = remove_node(node->right_child_);
+	remove_node(predecessor(node));
   }
   return node;
 }
