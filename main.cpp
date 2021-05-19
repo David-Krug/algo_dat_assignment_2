@@ -1,13 +1,39 @@
-#include "bst.cpp"
+#include "bst.hpp"
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
 #include <sstream>
 
-/*
+void print_nil(int key, int nilcount, std::ofstream& file)
+{
+    file << "    nil" << nilcount << " [shape=point]; \n";
+    file << "    " << key << " -> nil" << nilcount;
+}
+
+void print_node(Bst_Node node, std::ofstream& file) {
+    static int nil = 0;
+    Bst_Node current = node;
+
+    if (node.left_child_) {
+        file << "    " << node.data_ << " -> " << node.left_child_->data_ << "; \n";
+        print_node(*node.left_child_, file);
+    }
+    else {
+        print_nil(node.data_, nil++, file);
+    }
+
+    if (node.right_child_) {
+        file << "    " << node.data_ << " -> " << node.right_child_->data_;
+        print_node(*node.right_child_, file);
+    }
+    else {
+        print_nil(node.data_, nil++, file);
+    }
+}
+
 void printBST(Bst_Node const& node) {
-    std::ofstream Graphfile("Graph3.txt");
+    std::ofstream Graphfile("Graph.txt");
     Graphfile << "digraph BST { \n";
     Graphfile << "    node [fontname=\"Arial\"]; \n";
     Graphfile << "    graph [ordering=\"out\"]; \n";
@@ -22,36 +48,9 @@ void printBST(Bst_Node const& node) {
         print_node(node, Graphfile);
     }
 
-    Graphfile << "}";
+    Graphfile << "\n    }";
     Graphfile.close();
 }
-
-void print_node(Bst_Node const& node, FILE* file) {
-    static int nil = 0;
-
-    if (node.left_child_ != nullptr) {
-        fprintf(file, "    %d -> %d; \n", node.data_, node.left_child_->data_);
-        print_node(node.left_child_, file);
-    }
-    else {
-        print_nil(node.data_, nil++, file);
-    }
-
-    if (node.right_child_ != nullptr) {
-        fprintf(file, "    %d -> %d; \n", node.data_, node.right_child_->data_);
-        print_node(node.right_child_, file);
-    }
-    else {
-        print_nil(node.data_, nil++, file);
-    }
-}
-
-void print_nil(int key, int nilcount, FILE* file)
-{
-    fprintf(file, "    nil%d [shape=point]; \n", nilcount);
-    fprintf(file, "    %d -> nil%d; \n", key, nilcount);
-}
-*/
 
 std::vector<int> str_to_vector(std::string input)
 {
@@ -170,8 +169,9 @@ int main()
           }
         }
         else if (input2 == "print") {
-          //printBST(bstmain->root_)
-          std::cout << "The tree has been printed to the file Graph3.txt" << std::endl;
+          auto arg = bstmain.root_;
+          printBST(*arg);
+          std::cout << "The tree has been printed to the file Graph.txt" << std::endl;
         }
         else if (input2 == "io") {
           std::cout << "The tree in order:" <<  std::endl;
