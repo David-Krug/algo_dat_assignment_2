@@ -83,7 +83,6 @@ int main()
     bstmain.in_order(bstmain.root_);
 
     std::string input2 = "start", input3 = "start"; 
-    //Bst_Node* found;
 
     while (input2 != "quit") {
 
@@ -121,43 +120,31 @@ int main()
         }
 
         else if (input2 == "pre") {
-            std::cout << "Which value would you like to find the predecessor of? \n";
-            /*std::cin.ignore();
-            input3 = std::cin.get();
-            *found = bstmain.search(input3);
-            if (found) {
-                Bst_node* predecessor = bstmain.predecessor(found);
-                if (predecessor) {
-                    std::cout << "The predecessor of " << input3 << " is " << predecessor.data_ << "\n";
-                }
-                else {
-                    std::cout << input3 << " does not have a predecessor within the tree. \n";
-                }
-            }
-            else {
-                std::cout << input3 << " could not be found within the tree and therefore does"  
-                          << " not have a predecessor. \n";
-            }*/
+          std::cout << "Which value would you like to find the predecessor of? \n";
+          std::string str3;
+          std::cin >> str3;
+          auto input3 = stoi(str3);
+          auto found = bstmain.search(input3, bstmain.root_);
+          if (found != nullptr) {
+            std::cout << bstmain.predecessor(found)->data_ << " Is the predecessor of " << found->data_ << std::endl;
+          }
+          else {
+              std::cout << input3 << " could not be found within the tree and was therefore has no predecessor. \n";
+          }
         }
 
         else if (input2 == "suc") {
-            std::cout << "Which value would you like to find the successor of? \n";
-            /*std::cin.ignore();
-            input3 = std::cin.get();
-            *found = bstmain.search(input5);
-            if (found3) {
-                Bst_node* successor = bstmain.successor(found);
-                if (successor) {
-                    std::cout << "The successor of " << input3 << " is " << successor.data_ << "\n";
-                }
-                else {
-                    std::cout << input3 << " does not have a successor within the tree. \n";
-                }
-            }
-            else {
-                std::cout << input3 << " could not be found within the tree and therefore does not "
-                          << "have a successor. \n";
-            }*/
+          std::cout << "Which value would you like to find the successor of? \n";
+          std::string str3;
+          std::cin >> str3;
+          auto input3 = stoi(str3);
+          auto found = bstmain.search(input3, bstmain.root_);
+          if (found != nullptr) {
+            std::cout << bstmain.successor(found)->data_ << " Is the successor of "<< found->data_<< std::endl;
+          }
+          else {
+            std::cout << input3 << " could not be found within the tree and was therefore has no successor. \n";
+          }
         }
 
         else if (input2 == "add") {
@@ -178,12 +165,13 @@ int main()
             bstmain.remove_node(found);
             std::cout << input3 << " has been removed from the tree. \n";
           }
-        else {
-          std::cout << input3 << " could not be found within the tree and was therefore not removed. \n";
-        }
+          else {
+            std::cout << input3 << " could not be found within the tree and was therefore not removed. \n";
+          }
         }
         else if (input2 == "print") {
           //printBST(bstmain->root_)
+          std::cout << "The tree has been printed to the file Graph3.txt" << std::endl;
         }
         else if (input2 == "io") {
           std::cout << "The tree in order:" <<  std::endl;
