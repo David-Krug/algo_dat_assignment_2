@@ -125,7 +125,13 @@ int main()
           auto input3 = stoi(str3);
           auto found = bstmain.search(input3, bstmain.root_);
           if (found != nullptr) {
-            std::cout << bstmain.predecessor(found)->data_ << " Is the predecessor of " << found->data_ << std::endl;
+            auto predecessor = bstmain.predecessor(found);
+            if (predecessor != nullptr) {
+                std::cout << predecessor->data_ << " Is the predecessor of " << found->data_ << std::endl;
+            }
+            else {
+                std::cout << input3 << " has no predecessor. \n";
+            }
           }
           else {
               std::cout << input3 << " could not be found within the tree and was therefore has no predecessor. \n";
@@ -139,7 +145,13 @@ int main()
           auto input3 = stoi(str3);
           auto found = bstmain.search(input3, bstmain.root_);
           if (found != nullptr) {
-            std::cout << bstmain.successor(found)->data_ << " Is the successor of "<< found->data_<< std::endl;
+            auto successor = bstmain.successor(found);
+            if (successor != nullptr) {
+              std::cout << successor->data_ << " Is the successor of " << found->data_ << std::endl;
+            }
+            else {
+              std::cout << input3 << " has no successor. \n";
+            }
           }
           else {
             std::cout << input3 << " could not be found within the tree and was therefore has no successor. \n";

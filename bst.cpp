@@ -41,6 +41,9 @@ Bst_Node* Bst::maximum(Bst_Node* root) const					//returns the node that is the 
 
 Bst_Node* Bst::successor(Bst_Node* node) const
 {
+  if (node == maximum(root_)) {
+	return nullptr;
+  }
   if (node->right_child_ != nullptr) {
 	return minimum(node->right_child_);
   }
@@ -57,6 +60,9 @@ Bst_Node* Bst::successor(Bst_Node* node) const
 
 Bst_Node* Bst::predecessor(Bst_Node* node) const
 {
+  if (node == minimum(root_)) {
+	return nullptr;
+  }
   if (node->left_child_ != nullptr) {
 	return maximum(node->left_child_);
   }
