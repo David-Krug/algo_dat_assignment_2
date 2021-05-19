@@ -4,22 +4,18 @@
 //Bst
 Bst_Node* Bst::search(int key_value, Bst_Node* node) const		//returns the node if it exists in the tree, otherwise returns NULL
 {
-  std::cout << node->data_ << std::endl;
-  std::cout << key_value << std::endl;
   if (node == nullptr) {
     return nullptr;
   }
-  if (node->data_ == key_value){
+  else if (node->data_ == key_value){
 	return node;
   }
-  if (node->data_ > key_value) {
+  else if (node->data_ > key_value) {
 	node = node->left_child_;
-	std::cout << "ha" << std::endl;
 	search(key_value, node);
   }
-  if (node->data_ > key_value) {
+  else if (node->data_ < key_value) {
 	node = node->right_child_;
-	std::cout << "ha" << std::endl;
 	search(key_value, node);
   }
 }
