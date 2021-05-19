@@ -1,136 +1,161 @@
 #include "bst.hpp"
+#include <iostream>
 
 //Bst
-Bst_Node* Bst::search(int key_value, Bst_Node* node) const		//Should return pointer to node (?) 
+Bst_Node* Bst::search(int key_value, Bst_Node* node) const		//returns the node if it exists in the tree, otherwise returns NULL
 {
+  std::cout << node->data_ << std::endl;
+  std::cout << key_value << std::endl;
+  if (node == nullptr) {
+    return nullptr;
+  }
   if (node->data_ == key_value){
 	return node;
   }
-  else if (node->data_ > key_value) {
-    //if ()
+  if (node->data_ > key_value) {
+	node = node->left_child_;
+	std::cout << "ha" << std::endl;
+	search(key_value, node);
   }
-  else if (node->data_ > key_value) {
-    
+  if (node->data_ > key_value) {
+	node = node->right_child_;
+	std::cout << "ha" << std::endl;
+	search(key_value, node);
   }
-  //if nodeX.value == key_value, return (pointer to) node X
-	
-  //else if nodeX.value > key_value, check nodeX.leftchild,
-	//if NIL, then key_value doesn't exist within tree
-	//if not NIL, jump back to first if (recursive function?)
-
-  //else if nodeX.value < key_value, check nodeX.rightchild, 
-	//if NIL, then key_value doesn't exist within tree
-	//if not NIL, jump back to first if (recursive function?)
 }
 
 
-int* Bst::minimum() const				//Needs node as parameter to know where to start (important for successor & predecessor functions)
+Bst_Node* Bst::minimum(Bst_Node* root) const					//returns the node that is the farthest to the left
 {
-	//while nodeX.leftchild != NIL:
-		//nodeX = nodeX.leftchild
-		
-	//return nodeX or nodeX.value;
-  return nullptr;
+  auto minimum = root;
+  while (minimum->left_child_ != nullptr) {
+	minimum = minimum->left_child_;
+  }
+  return minimum;
 }
 
-int* Bst::maximum() const				//Needs node as parameter to know where to start (important for successor & predecessor functions)
+Bst_Node* Bst::maximum(Bst_Node* root) const					//returns the node that is the farthest to the right
 {
-	//while nodeX.rightchild != NIL:
-		//nodeX = nodeX.rightchild
-		
-	//return nodeX or nodeX.value;
-	return nullptr;
+  auto maximum = root;
+  while (maximum->right_child_ != nullptr) {
+	maximum = maximum->right_child_;
+  }
+  return maximum;
 }
 
-int* Bst::successor(Bst_Node const& node) const
+Bst_Node* Bst::successor(Bst_Node* node) const
 {
-	//if nodeX.rightchild != NIL:
-		//get minimum of right subtree
-
-	//else:
-		//(find first ancestor reached from the left)
-		//check if NodeX is parent's left child:
-			//if true, then parent is successor
-			//if false, go further up
-	return nullptr;
-}
-
-int* Bst::predecessor(Bst_Node const& node) const
-{
-	//if nodeX.leftchild != NIL:
-		  //get maximum of left subtree
-
-	//else:
-		//find first ancestor reached from the right
-		//check if NodeX is parent's right child:
-			//if true, then parent is successor
-			//if false, go further up
-	return nullptr;
-}
-
-void Bst::add_node(int node_value)
-{
-  Bst_Node* node = new Bst_Node( node_value );
-  if (root_ == nullptr) {
-	root_ = node;
+  if (node->right_child_ != nullptr) {
+	return minimum(node->right_child_);
   }
   else {
-	bool r;
-	auto position = root_;
-	auto parent = position;
-	while (position != nullptr) {
-	  if (position->data_ > node->data_) {
-		auto parent = position;
-		bool r = false;
-		position = position->left_child_;
-	  }
-	  if (position->data_ < node->data_) {
-		auto parent = position;
-		bool r = true;
-		position = position->right_child_;
-	  }
+	auto parent = node->parent_;
+	auto child = node;
+	while (parent != nullptr && child == parent->right_child_) {
+	  child = parent;
+	  parent = parent->parent_;
 	}
-	node->parent_ = parent;
-	if (r) {
-	  parent->right_child_ = node;
+	return parent;
+  }
+}
+
+Bst_Node* Bst::predecessor(Bst_Node* node) const
+{
+  if (node->left_child_ != nullptr) {
+	return maximum(node->left_child_);
+  }
+  else {
+	auto parent = node->parent_;
+	auto child = node;
+	while (parent != nullptr && child == parent->left_child_) {
+	  child = parent;
+	  parent = parent->parent_;
 	}
-	else {
-	  parent->left_child_ = node;
+	return parent;
+  }
+}
+
+void Bst::add_node(int node_value)							//adds a node to the tree
+{
+  Bst_Node* node = new Bst_Node( node_value );
+  //check if the tree has a root
+  if (root_ == nullptr) {
+	root_ = node;
+	return;
+  }
+
+  //help pointers for the current and the parent node
+  auto position = root_;
+  Bst_Node* parent = nullptr;
+
+  //traverse the tree until the position is at a leaf
+  while (position != nullptr) {
+	parent = position;
+	if (position->data_ > node->data_) {
+	  position = position->left_child_;
+	}
+	else if (position->data_ < node->data_) {
+	  position = position->right_child_;
+	}
+	else if (position->data_ == node->data_) {
+	  std::cout << node->data_ << " could not be added to the tree because it already exists. \n";
+	  return;
 	}
   }
 
-	//while nodeX.value != NIL:
-		//if nodeX.value > node.value:
-			//nodeX = nodeX.leftchild;
-		//if nodeX.value < node.value:
-			//nodeX = nodeX.rightchild;
-
-	//insert node at place nodeX
-	//(after while-loop, nodeX is empty child of a node)
+  //add the links to the parent and child
+  node->parent_ = parent;
+  if (parent->data_ < node_value) {
+	parent->right_child_ = node;
+  }
+  else {
+	parent->left_child_ = node;
+  }
 }
 
-void Bst::remove_node(Bst_Node* node)
+Bst_Node* Bst::remove_node(Bst_Node* node)
 {
-	//if node.leftchild == NIL and node.rightchild == NIL:
-		//replace node with NIL
+  //remove leaf
+  if (node->left_child_ == nullptr && node->right_child_ == nullptr) {
+	delete node;
+	node = nullptr;
+  }
+  //remove node with only right child
+  else if (node->left_child_ == nullptr) {
+	auto temp = node;
+	node = node->right_child_;
+	delete temp;
+  }
+  //remove node with only left child
+  else if (node->right_child_ == nullptr) {
+	auto temp = node;
+	node = node->left_child_;
+	delete temp;
+  }
+  //remove node with two childs
+  else {
+	auto temp = minimum(node);
+	node->data_ = temp->data_;
+	node->right_child_ = remove_node(node->right_child_);
+  }
+  return node;
+}
 
-	//if (node.leftchild != NIL and node.leftchild == NIL) OR (node.leftchild == NIL and node.leftchild != NIL):
-		//check if node's child has children and so forth
-		//if not: 
-			//replace node with node's child 
-			//replace node's child with NIL
-
-	//if node.leftchild != NIL and node.rightchild != NIL:
-		//if node.rightchild.leftchild == NIL:
-			//replace node with node.rightchild
-			//replace node.rightchild with NIL
-		//else:
-			//find and store successor nodeY of node
-			//remove_node(nodeY)
-			//replace node with nodeY's value
+void Bst::in_order(Bst_Node* node) {					//sorts the tree in order and prints to the terminal
+  if (node == nullptr) {
+	return;
+  }
+  in_order(node->left_child_);
+  std::cout << node->data_ << " ";
+  in_order(node->right_child_);
 }
 
 //Bst_Node
 
-Bst_Node::Bst_Node(int data_, struct Bst_Node* parent_, struct Bst_Node* left_child_, struct Bst_Node* right_child_)
+//constructor
+Bst_Node::Bst_Node(int data, struct Bst_Node* parent, struct Bst_Node* left_child, struct Bst_Node* right_child) :
+  data_{data},
+  parent_{parent},
+  left_child_{left_child},
+  right_child_{right_child}
 {}

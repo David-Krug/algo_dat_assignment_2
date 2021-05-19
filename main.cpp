@@ -1,4 +1,4 @@
-//#include "bst.hpp"
+#include "bst.cpp"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -15,34 +15,34 @@ void printBST(Bst_Node const& node) {
     if (!node.data_) {
         Graphfile << "\n";
     }
-    else if (!node.rightchild && !node.leftchild) {
+    else if (!node.right_child_ && !node.left_child_) {
         Graphfile << "    " << node.data_ << "; \n";
     }
     else {
-        print_node(Graphfile, file);
+        print_node(node, Graphfile);
     }
 
     Graphfile << "}";
     Graphfile.close();
 }
 
-void print_node (Bst_Node const& node, FILE* file) {
+void print_node(Bst_Node const& node, FILE* file) {
     static int nil = 0;
 
-    if (node.leftchild != NIL) {
-        fprintf(file, "    %d -> %d; \n", node.data_, node.leftchild.data_);
-        print_node(node.leftchild, file);
+    if (node.left_child_ != nullptr) {
+        fprintf(file, "    %d -> %d; \n", node.data_, node.left_child_->data_);
+        print_node(node.left_child_, file);
     }
     else {
-        print_null(node.data_, nil++, file);
+        print_nil(node.data_, nil++, file);
     }
 
-    if (node.rightchild != NIL) {
-        fprintf(file, "    %d -> %d; \n", node.data_, node.rightchild.data_);
-        print_node(node.rightchild, file);
+    if (node.right_child_ != nullptr) {
+        fprintf(file, "    %d -> %d; \n", node.data_, node.right_child_->data_);
+        print_node(node.right_child_, file);
     }
     else {
-        print_null(node.data_, nil++, file);
+        print_nil(node.data_, nil++, file);
     }
 }
 
@@ -50,7 +50,8 @@ void print_nil(int key, int nilcount, FILE* file)
 {
     fprintf(file, "    nil%d [shape=point]; \n", nilcount);
     fprintf(file, "    %d -> nil%d; \n", key, nilcount);
-}*/
+}
+*/
 
 std::vector<int> str_to_vector(std::string input)
 {
@@ -73,12 +74,13 @@ int main()
     std::cin >> arrstr;
     std::vector<int> sequence = str_to_vector(arrstr);
 
-    std::cout << "\nBuilding a tree containing the following integers: \n";
-    //Bst bstmain;
+    std::cout << "\nBuilding the tree...\n";
+    Bst bstmain;
     for (int i : sequence) {
-        //bstmain.add_node_(i);
-        std::cout << i << " ";
+        bstmain.add_node(i);
     }
+    std::cout << "\nThe tree in order:\n";
+    bstmain.in_order(bstmain.root_);
 
     std::string input2 = "start", input3 = "start"; 
     //Bst_Node* found;
@@ -89,36 +91,33 @@ int main()
                     << "- Find maximum or minimum - Enter 'max' or 'min' \n"
                     << "- Search the tree for a specific value - Enter 'search' \n"
                     << "- Find the pre- or successor of a node - Enter 'pre' or 'suc' \n"
-                    << "- Add or remove a node from the tree - Enter 'add' or 'rem' \n";
+                    << "- Add or remove a node from the tree - Enter 'add' or 'rem' \n"
+                    << "- Print the tree in order. - Enter 'io' \n"
+                    << "- Print the tree to a text file in the dot language. - Enter 'print' \n";
         std::cin.ignore();
         std::cin >> input2;
 
         if (input2 == "min") {
             std::cout << "Searching for the minimum of the tree. \n";
-            //*found = bstmain.minimum()
-            //std::cout << "The minimum of the tree is " << found.data_;
+            std::cout << "The minimum of the tree is " << bstmain.minimum(bstmain.root_)->data_ << std::endl;
         }
 
         else if (input2 == "max") {
             std::cout << "Searching for the maximum of the tree. \n";
-            //*found = bstmain.maximum()
-            //std::cout << "The maximum of the tree is " << found.data_;
+            std::cout << "The maximum of the tree is " << bstmain.maximum(bstmain.root_)->data_ << std::endl;
         }
 
         else if (input2 == "search") {
             std::cout << "Which value would you like to search the tree for? \n";
-            /*std::cin.ignore();
-            input3 = std::cin.get();
-            *found = bstmain.search(input3);
-            if (*found) {
-                std::cout << found.data_ << " is a part of the tree. \n"
-                          << "Its left child is " << found.left_child_.data_ << "\n"
-                          << "Its right child is " << found.right_child_.data_ << "\n"
-                          << "Its parent is " << found.parent_.data_ << "\n";
+            std::string str3;
+            std::cin >> str3;
+            auto input3 = stoi(str3);
+            if (bstmain.search(input3, bstmain.root_) == nullptr) {
+                std::cout << input3 << " is not in the tree. \n";
             }
             else {
-                std::cout << input3 << " could not be found within the tree. \n";
-            }*/
+                std::cout << input3 << " is part of the tree. \n";
+            }
         }
 
         else if (input2 == "pre") {
@@ -163,36 +162,35 @@ int main()
 
         else if (input2 == "add") {
             std::cout << "Which value would you like to add to the tree? \n";
-            /*std::cin.ignore();
-            input3 = std::cin.get(); 
-            *found = bstmain.search(input3);
-            if (found) {
-                std::cout << input3 << " could not be added to the tree because it already exists. \n";
-            }
-            else {
-                Bst_node* added = bstmain.add_node(input3);
-                std::cout << input3 << " has been added to the tree. \n"
-                          << "Its right child is " << added.right_child_.data_  << "\n";
-                          << "Its left child is " << added.left_child_.data_  << "\n";
-                          << "Its parent is " << added.parent_.data_  << "\n";
-            }*/
+            std::string str3;
+            std::cin >> str3;
+            auto input3 = stoi(str3);
+            bstmain.add_node(input3);
         }
 
         else if (input2 == "rem") {
-            std::cout << "Which value would you like to remove from the tree? \n";
-            /*std::cin.ignore();
-            input3 = std::cin.get();
-            *found = bstmain.search(input3);
-            if (found) {
-                std::cout << input3 << " has been removed from the tree. \n";
-            }
-            else {
-                std::cout << input3 << " could not be found within the tree and was therefore not removed. \n";
-            }*/
+          std::cout << "Which value would you like to remove from the tree? \n";
+          std::string str3;
+          std::cin >> str3;
+          auto input3 = stoi(str3);
+          auto found = bstmain.search(input3,bstmain.root_);
+          if (found != nullptr) {
+            bstmain.remove_node(found);
+            std::cout << input3 << " has been removed from the tree. \n";
+          }
+        else {
+          std::cout << input3 << " could not be found within the tree and was therefore not removed. \n";
+        }
+        }
+        else if (input2 == "print") {
+          //printBST(bstmain->root_)
+        }
+        else if (input2 == "io") {
+          std::cout << "The tree in order:" <<  std::endl;
+          bstmain.in_order(bstmain.root_);
         }
     }
     std::cout << "Shutting down the program. Goodbye! \n";
 
-    //printBST();
     return 1;
 }
